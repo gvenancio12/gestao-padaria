@@ -37,3 +37,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDEs
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*~
+
+# linter cache
+.eslintcache
+
