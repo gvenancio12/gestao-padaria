@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: gestao_padaria_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-gestao_padaria}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gestao_padaria}
+      POSTGRES_DB: ${POSTGRES_DB:-gestao_padaria_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gestao_padaria_web
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gestao_padaria}:${POSTGRES_PASSWORD:-gestao_padaria}@db:5432/${POSTGRES_DB:-gestao_padaria_db}
+      NODE_ENV: development
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
