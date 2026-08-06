@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fábrica de Pães - Gestão de Pedidos Artesanais
 
-## Getting Started
+Este é o repositório principal do sistema de Gestão de Pedidos da Fábrica de Pães, construído com **Next.js**, **Tailwind CSS** e **Prisma** (PostgreSQL).
 
-First, run the development server:
+## Como rodar o projeto localmente (Passo a Passo para a Equipe)
 
+Para que o projeto funcione na sua máquina (especialmente a parte de login e banco de dados), siga exatamente os passos abaixo:
+
+### 1. Pré-requisitos
+- Ter o [Node.js](https://nodejs.org/) instalado.
+- Ter o [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e **aberto/rodando** no seu computador.
+
+### 2. Configurar o Banco de Dados
+O banco de dados roda localmente através do Docker. No terminal, dentro da pasta do projeto, execute:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up -d db
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Configurar as Variáveis de Ambiente
+Crie um arquivo chamado `.env` na raiz do projeto e copie o conteúdo do arquivo `TEMPLATE.env` para ele. O arquivo `.env` deve ficar assim:
+```env
+POSTGRES_USER=gestao_padaria
+POSTGRES_PASSWORD=gestao_padaria
+POSTGRES_DB=gestao_padaria_db
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+DATABASE_URL="postgresql://gestao_padaria:gestao_padaria@localhost:5432/gestao_padaria_db?schema=public"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Instalar as Dependências
+Baixe todos os pacotes do projeto rodando:
+```bash
+npm install
+```
 
-## Learn More
+### 5. Sincronizar o Prisma (Criar tabelas)
+Para criar as tabelas no seu banco de dados local (como a tabela de Usuários), rode:
+```bash
+npx prisma db push
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 6. Iniciar o Servidor
+Por fim, inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o sistema rodando.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Estrutura Atual
+- **Autenticação:** O sistema já possui um fluxo completo de Login e Cadastro seguros utilizando JWT (salvo em cookies) e criptografia de senhas com `bcryptjs`.
+- **Rotas:** A tela inicial (`/`) é o Login/Cadastro. Após logado, o usuário é direcionado ao painel restrito (`/dashboard`).
