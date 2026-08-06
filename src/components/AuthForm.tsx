@@ -12,12 +12,12 @@ export default function AuthForm() {
   );
 
   return (
-    <div className="w-full max-w-md bg-[#fafafa] rounded-2xl shadow-xl p-10 mx-4">
+    <div className="w-full max-w-md bg-[#fafafa] dark:bg-[#1E1E1E] rounded-2xl shadow-xl p-10 mx-4 transition-colors">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-[#7A2A03] mb-2 font-serif">
+        <h1 className="text-4xl font-bold text-[#7A2A03] dark:text-[#F3C49B] mb-2 font-serif transition-colors">
           Fábrica de Pães
         </h1>
-        <p className="text-[#DE773B] font-medium">
+        <p className="text-[#DE773B] dark:text-[#E0C097] font-medium transition-colors">
           Gestão de Pedidos Artesanais
         </p>
       </div>
@@ -26,7 +26,7 @@ export default function AuthForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-[#7A2A03] mb-1"
+            className="block text-sm font-medium text-[#7A2A03] dark:text-[#E0C097] mb-1 transition-colors"
           >
             E-mail
           </label>
@@ -36,14 +36,14 @@ export default function AuthForm() {
             type="email"
             placeholder="seu@email.com"
             required
-            className="w-full px-4 py-3 rounded-lg border border-[#F3C49B] bg-white text-gray-800 placeholder-[#F3C49B] focus:outline-none focus:ring-2 focus:ring-[#DE773B] transition-colors"
+            className="w-full px-4 py-3 rounded-lg border border-[#F3C49B] dark:border-[#444] bg-white dark:bg-[#2A2A2A] text-gray-900 dark:text-white placeholder-[#F3C49B] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#DE773B] transition-colors"
           />
         </div>
 
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-[#7A2A03] mb-1"
+            className="block text-sm font-medium text-[#7A2A03] dark:text-[#E0C097] mb-1 transition-colors"
           >
             Senha
           </label>
@@ -52,12 +52,12 @@ export default function AuthForm() {
             name="password"
             type="password"
             required
-            className="w-full px-4 py-3 rounded-lg border border-[#F3C49B] bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#DE773B] transition-colors"
+            className="w-full px-4 py-3 rounded-lg border border-[#F3C49B] dark:border-[#444] bg-white dark:bg-[#2A2A2A] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#DE773B] transition-colors"
           />
         </div>
 
         {state?.error && (
-          <p className="text-red-500 text-sm font-medium text-center">
+          <p className="text-red-500 dark:text-red-400 text-sm font-medium text-center">
             {state.error}
           </p>
         )}
@@ -75,7 +75,7 @@ export default function AuthForm() {
         <button
           type="button"
           onClick={() => setIsLogin(!isLogin)}
-          className="text-sm text-[#DE773B] hover:text-[#7A2A03] font-medium transition-colors"
+          className="text-sm text-[#DE773B] dark:text-[#D46200] hover:text-[#7A2A03] dark:hover:text-[#F3C49B] font-medium transition-colors"
         >
           {isLogin
             ? 'Não tem uma conta? Cadastre-se'
