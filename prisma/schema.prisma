@@ -13,14 +13,15 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String?
-  email     String   @unique
+  email     String     @unique
   password  String
-  role      Role     @default(CLIENTE)
+  role      Role       @default(CLIENTE)
   orders    Order[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  auditLogs AuditLog[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Bread {
@@ -62,4 +63,15 @@ model OrderItem {
   breadId   String
   quantity  Int
   price     Decimal @db.Decimal(10, 2)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  action    String   
+  entity    String   
+  entityId  String?  
+  details   String?  
+  createdAt DateTime @default(now())
 }

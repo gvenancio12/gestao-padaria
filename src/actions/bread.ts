@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { getSession } from '@/lib/session';
+import { logAction } from './audit';
 
 export async function getBreads() {
   const session = await getSession();
@@ -18,26 +19,26 @@ export async function getBreads() {
 }
 
 export async function createBread(prevState: any, formData: FormData) {
+  const session = await getSession();
+  if (!session) {
+    return { error: 'Não autorizado' };
+  }
+
+  const name = formData.get('name') as string;
+  const description = formData.get('description') as string;
+  const priceStr = formData.get('price') as string;
+  const category = formData.get('category') as string;
+  const unit = formData.get('unit') as string;
+
+  if (!name || !priceStr || !category || !unit) {
+    return { error: 'Preencha os campos obrigatórios' };
+  }
+
   try {
-    const session = await getSession();
-    if (!session) {
-      return { error: 'Não autorizado' };
-    }
-
-    const name = formData.get('name') as string;
-    const description = formData.get('description') as string;
-    const priceStr = formData.get('price') as string;
-    const category = formData.get('category') as string;
-    const unit = formData.get('unit') as string;
-
-    if (!name || !priceStr || !category || !unit) {
-      return { error: 'Preencha os campos obrigatórios' };
-    }
-
     // Replace comma with dot for decimal parsing
     const price = parseFloat(priceStr.replace(',', '.'));
 
-    await prisma.bread.create({
+    const bread = await prisma.bread.create({
       data: {
         name,
         description,
@@ -54,17 +55,19 @@ export async function createBread(prevState: any, formData: FormData) {
   }
 }
 
-export async function toggleBreadAvailability(id: string, isAvailable: boolean) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      throw new Error('Não autorizado');
-    }
+export async function toggleBreadAvailability(orderId: string, isAvailable: boolean) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error('Não autorizado');
+  }
 
-    await prisma.bread.update({
-      where: { id },
+  try {
+    const bread = await prisma.bread.update({
+      where: { id: orderId },
       data: { isAvailable },
     });
+
+    await logAction('ATUALIZOU', 'PÃO', bread.id, `Alterou disponibilidade para: ${isAvailable ? 'Sim' : 'Não'}`);
 
     revalidatePath('/dashboard/paes');
     return { success: true };
@@ -73,16 +76,18 @@ export async function toggleBreadAvailability(id: string, isAvailable: boolean) 
   }
 }
 
-export async function deleteBread(id: string) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      throw new Error('Não autorizado');
-    }
+export async function deleteBread(orderId: string) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error('Não autorizado');
+  }
 
-    await prisma.bread.delete({
-      where: { id },
+  try {
+    const bread = await prisma.bread.delete({
+      where: { id: orderId },
     });
+
+    await logAction('DELETOU', 'PÃO', bread.id, `Deletou o pão: ${bread.name}`);
 
     revalidatePath('/dashboard/paes');
     return { success: true };

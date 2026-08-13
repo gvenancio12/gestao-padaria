@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { getSession } from '@/lib/session';
+import { logAction } from './audit';
 
 export async function getOrders() {
   const session = await getSession();
@@ -32,10 +33,12 @@ export async function updateOrderStatus(orderId: string, status: 'PENDENTE' | 'E
   }
 
   try {
-    await prisma.order.update({
+    const order = await prisma.order.update({
       where: { id: orderId },
       data: { status },
     });
+
+    await logAction('MOVEU', 'PEDIDO', order.id, `Moveu para: ${status}`);
 
     revalidatePath('/dashboard/pedidos');
     return { success: true };
