@@ -9,6 +9,7 @@ export default async function PedidosPage() {
     id: order.id,
     customerName: order.customer.name || order.customer.email,
     status: order.status,
+    paymentStatus: order.paymentStatus,
     totalAmount: order.totalAmount.toString(),
     createdAt: order.createdAt.toISOString(),
     items: order.items.map(item => ({

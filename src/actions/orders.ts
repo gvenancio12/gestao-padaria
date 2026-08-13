@@ -46,3 +46,24 @@ export async function updateOrderStatus(orderId: string, status: 'PENDENTE' | 'E
     return { success: false, error: 'Erro ao atualizar o pedido' };
   }
 }
+
+export async function togglePaymentStatus(orderId: string, paymentStatus: 'PENDENTE' | 'PAGO') {
+  const session = await getSession();
+  if (!session) {
+    throw new Error('Não autorizado');
+  }
+
+  try {
+    const order = await prisma.order.update({
+      where: { id: orderId },
+      data: { paymentStatus },
+    });
+
+    await logAction('ATUALIZOU', 'PAGAMENTO', order.id, `Status alterado para: ${paymentStatus}`);
+
+    revalidatePath('/dashboard/pedidos');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Erro ao atualizar pagamento' };
+  }
+}
