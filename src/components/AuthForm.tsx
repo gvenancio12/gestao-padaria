@@ -2,9 +2,11 @@
 
 import { useActionState, useState } from 'react';
 import { loginUser, registerUser } from '@/actions/auth';
+import Image from 'next/image';
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   // Use separate hooks to prevent stale actions when switching modes
   const [loginState, loginFormAction, isLoginPending] = useActionState(loginUser, null);
@@ -13,6 +15,23 @@ export default function AuthForm() {
   const state = isLogin ? loginState : registerState;
   const formAction = isLogin ? loginFormAction : registerFormAction;
   const isPending = isLogin ? isLoginPending : isRegisterPending;
+
+  if (showEasterEgg) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 space-y-6">
+        <h2 className="text-3xl font-bold font-serif text-gray-900 dark:text-white">FAZ O L!</h2>
+        <div className="relative w-64 h-64 rounded-xl overflow-hidden shadow-2xl">
+          <Image src="/faz-o-l.png" alt="Faz o L" fill className="object-cover" />
+        </div>
+        <button 
+          onClick={() => setShowEasterEgg(false)}
+          className="mt-4 px-6 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors font-medium text-gray-800 dark:text-gray-200"
+        >
+          Voltar para o Login
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md bg-[#fafafa] dark:bg-[#1E1E1E] rounded-2xl shadow-xl p-10 mx-4 transition-colors">
@@ -102,6 +121,18 @@ export default function AuthForm() {
             className="w-full px-4 py-3 rounded-lg border border-[#F3C49B] dark:border-[#444] bg-white dark:bg-[#2A2A2A] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#DE773B] transition-colors"
           />
         </div>
+
+        {isLogin && (
+          <div className="flex justify-end mt-1 mb-3">
+            <button
+              type="button"
+              onClick={() => setShowEasterEgg(true)}
+              className="text-sm text-[#E57813] hover:text-[#C9660D] font-medium transition-colors"
+            >
+              Esqueci minha senha
+            </button>
+          </div>
+        )}
 
         {state?.error && (
           <p className="text-red-500 dark:text-red-400 text-sm font-medium text-center">

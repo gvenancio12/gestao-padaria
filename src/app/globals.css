@@ -26,3 +26,8 @@ body {
 .dark body {
   font-family: var(--font-merriweather);
 }
+
+/* API Nativa de View Transitions (Chrome 126+) para transições extremamente suaves */
+@view-transition {
+  navigation: auto;
+}
