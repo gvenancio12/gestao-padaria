@@ -15,12 +15,72 @@ const initialBreads = [
 
 async function main() {
   console.log('🌱 Iniciando o seed...');
-  for (const bread of initialBreads) {
-    const created = await prisma.bread.create({
-      data: bread,
-    });
-    console.log(`✅ Adicionado: ${created.name}`);
+  
+  // Seed Breads
+  const existingBreads = await prisma.bread.count();
+  if (existingBreads === 0) {
+    for (const bread of initialBreads) {
+      const created = await prisma.bread.create({
+        data: bread,
+      });
+      console.log(`✅ Adicionado: ${created.name}`);
+    }
   }
+
+  // Seed Orders
+  const existingOrders = await prisma.order.count();
+  if (existingOrders === 0) {
+    const user = await prisma.user.findFirst({ where: { role: 'CLIENTE' } });
+    const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' } });
+    const breads = await prisma.bread.findMany({ take: 3 });
+
+    const customerId = user?.id || admin?.id;
+
+    if (customerId && breads.length >= 3) {
+      await prisma.order.create({
+        data: {
+          customerId,
+          status: 'PENDENTE',
+          totalAmount: breads[0].price.toNumber() * 2,
+          items: {
+            create: [
+              { breadId: breads[0].id, quantity: 2, price: breads[0].price }
+            ]
+          }
+        }
+      });
+      console.log('✅ Pedido Pendente Adicionado');
+
+      await prisma.order.create({
+        data: {
+          customerId,
+          status: 'EM_PRODUCAO',
+          totalAmount: breads[1].price.toNumber() * 5,
+          items: {
+            create: [
+              { breadId: breads[1].id, quantity: 5, price: breads[1].price }
+            ]
+          }
+        }
+      });
+      console.log('✅ Pedido Em Produção Adicionado');
+
+      await prisma.order.create({
+        data: {
+          customerId,
+          status: 'PRONTO',
+          totalAmount: breads[2].price.toNumber() * 1,
+          items: {
+            create: [
+              { breadId: breads[2].id, quantity: 1, price: breads[2].price }
+            ]
+          }
+        }
+      });
+      console.log('✅ Pedido Pronto Adicionado');
+    }
+  }
+
   console.log('✨ Seed finalizado!');
 }
 

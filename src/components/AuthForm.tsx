@@ -51,6 +51,25 @@ export default function AuthForm() {
       </div>
 
       <form action={formAction} className="space-y-5">
+        {!isLogin && (
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-[#7A2A03] dark:text-[#E0C097] mb-1 transition-colors"
+            >
+              Nome completo
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Ex: João da Silva"
+              required={!isLogin}
+              className="w-full px-4 py-3 rounded-lg border border-[#F3C49B] dark:border-[#444] bg-white dark:bg-[#2A2A2A] text-gray-900 dark:text-white placeholder-[#F3C49B] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#DE773B] transition-colors"
+            />
+          </div>
+        )}
+
         <div>
           <label
             htmlFor="email"
