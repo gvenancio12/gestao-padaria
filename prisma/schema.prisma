@@ -13,11 +13,71 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String?
-  email     String   @unique
+  email     String     @unique
   password  String
-  role      Role     @default(CLIENTE)
+  role      Role       @default(CLIENTE)
+  orders    Order[]
+  auditLogs AuditLog[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Bread {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal     @db.Decimal(10, 2)
+  category    String      // 'Tradicional' ou 'Especial'
+  unit        String      // 'kg', 'un.', 'pacote'
+  isAvailable Boolean     @default(true)
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum OrderStatus {
+  PENDENTE
+  EM_PRODUCAO
+  PRONTO
+  CONCLUIDO
+}
+
+enum PaymentStatus {
+  PENDENTE
+  PAGO
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  customer      User          @relation(fields: [customerId], references: [id])
+  customerId    String
+  status        OrderStatus   @default(PENDENTE)
+  paymentStatus PaymentStatus @default(PENDENTE)
+  totalAmount   Decimal       @db.Decimal(10, 2)
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  bread     Bread   @relation(fields: [breadId], references: [id])
+  breadId   String
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  action    String   
+  entity    String   
+  entityId  String?  
+  details   String?  
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
