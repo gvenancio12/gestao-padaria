@@ -74,9 +74,9 @@ export default async function StorefrontPage() {
                 <div key={bread.id} className="bg-cream rounded-lg shadow-soft hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   <div className="p-0 flex flex-col flex-1 h-full">
                     <div className="aspect-square overflow-hidden rounded-t-lg">
-                      {/* Usando uma imagem estática temporária até o banco ter fotos */}
+                      {/* Tenta carregar a foto cadastrada no banco (Supabase); se for nula, exibe o placeholder padrão */}
                       <img
-                        src="/product_placeholder.png" 
+                        src={bread.imageUrl || "/product_placeholder.png"}
                         alt={bread.name}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
