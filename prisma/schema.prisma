@@ -32,6 +32,7 @@ model Bread {
   category    String // 'Tradicional' ou 'Especial'
   unit        String // 'kg', 'un.', 'pacote'
   isAvailable Boolean     @default(true)
+  imageUrl    String? // adição de campo para armazenar a URL da imagem do pão
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
