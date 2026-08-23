@@ -1,33 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Bacasime+Antique&family=Island+Moments&display=swap');
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme {
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-merriweather);
-}
-
-:root {
-  --background: #f8f9fa;
-  --foreground: #171717;
-}
-
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter);
-}
-
-.dark body {
-  font-family: var(--font-merriweather);
-}
-
-/* API Nativa de View Transitions (Chrome 126+) para transições extremamente suaves */
-@view-transition {
-  navigation: auto;
+  --color-cream: #FAF7F2;
+  --color-warm-brown: #9A6B4E;
+  --color-warm-beige: #F5F0E6;
+  --color-sage-green: #8F9E8B;
+  --font-island: "Island Moments", cursive;
+  --font-bacasime: "Bacasime Antique", serif;
 }
