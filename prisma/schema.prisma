@@ -29,9 +29,10 @@ model Bread {
   name        String
   description String?
   price       Decimal     @db.Decimal(10, 2)
-  category    String      // 'Tradicional' ou 'Especial'
-  unit        String      // 'kg', 'un.', 'pacote'
+  category    String // 'Tradicional' ou 'Especial'
+  unit        String // 'kg', 'un.', 'pacote'
   isAvailable Boolean     @default(true)
+  imageUrl    String? // adição de campo para armazenar a URL da imagem do pão
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -62,22 +63,22 @@ model Order {
 }
 
 model OrderItem {
-  id        String  @id @default(cuid())
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId   String
-  bread     Bread   @relation(fields: [breadId], references: [id])
-  breadId   String
-  quantity  Int
-  price     Decimal @db.Decimal(10, 2)
+  id       String  @id @default(cuid())
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId  String
+  bread    Bread   @relation(fields: [breadId], references: [id])
+  breadId  String
+  quantity Int
+  price    Decimal @db.Decimal(10, 2)
 }
 
 model AuditLog {
   id        String   @id @default(cuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  action    String   
-  entity    String   
-  entityId  String?  
-  details   String?  
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
   createdAt DateTime @default(now())
 }
